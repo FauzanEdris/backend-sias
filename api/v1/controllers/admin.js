@@ -16,5 +16,15 @@ module.exports = {
       console.log(e.message)
       // res.sendStatus(500) && next(error)
     }
+  },
+  add_users: async (req, res, next) => {
+    const { data } = req.body
+    try {
+      // 
+      res.json(data)
+      next()
+    } catch (e) {
+      // 
+    }
   }
 }
