@@ -1,7 +1,11 @@
-const express = require('express');
+const express = require('express')
 const { authenticate } = require('../controllers/admin')
-const router = express.Router();
+const router = express.Router()
 
-router.get('/', authenticate);
+router.get('/users', authenticate)
+router.post('/users', authenticate)
+router.put('/users', authenticate)
+router.patch('/users', authenticate)
+router.delete('/users', authenticate)
 
-module.exports = router;
+module.exports = router
