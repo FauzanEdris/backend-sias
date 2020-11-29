@@ -38,9 +38,9 @@ module.exports = {
     const data = await userModel.find()
     return data //just a dummy return as we aren't calling db right now
   },
-  view_all: async ({ skip, limit }) => {
+  view_all: async ({ projection, skip, limit }) => {
     skip = skip > 0 ? limit * (skip - 1) : 0
-    const data = await userModel.find().skip(parseInt(skip)).limit(parseInt(limit))
+    const data = await userModel.find({}, projection).skip(parseInt(skip)).limit(parseInt(limit))
     return data
   }
 }
