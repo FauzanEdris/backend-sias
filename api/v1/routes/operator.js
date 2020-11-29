@@ -7,9 +7,9 @@ router.post('/semester')
 router.put('/semester')
 router.delete('/semester')
 
-router.patch('/status/pendaftaran')
-router.patch('/status/asdos')
-router.patch('/status/dosen')
+router.put('/status/pendaftaran')
+router.put('/status/asdos')
+router.put('/status/dosen')
 
 router.get('/jadwal')
 router.post('/jadwal')
