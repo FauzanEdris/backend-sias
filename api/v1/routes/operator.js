@@ -1,11 +1,11 @@
 const express = require('express')
-// const { authenticate } = require('../controllers/authenticate')
+const operatorController = require('../controllers/operator')
 const router = express.Router()
 
-router.get('/semester')
-router.post('/semester')
-router.put('/semester')
-router.delete('/semester')
+router.get('/semester', operatorController.view_semester)
+router.post('/semester', operatorController.add_semester)
+router.put('/semester', operatorController.update_semester)
+router.delete('/semester', operatorController.delete_semester)
 
 router.put('/status/pendaftaran')
 router.put('/status/asdos')
