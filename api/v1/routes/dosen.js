@@ -5,7 +5,7 @@ const router = express.Router()
 router.get('/login', authenticate)
 
 router.get('/pendaftaran')
-router.get('/pendaftaran/download')
+router.get('/pendaftaran/transkip')
 router.put('/pendaftaran/terima')
 router.put('/pendaftaran/tolak')
 
