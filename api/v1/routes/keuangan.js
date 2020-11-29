@@ -1,7 +1,8 @@
 const express = require('express');
-const { authenticate } = require('../controllers/authenticate')
+// const { authenticate } = require('../controllers/authenticate')
 const router = express.Router();
 
-router.get('/login', authenticate);
+router.put('/kegiatan/terima')
+router.put('/kegiatan/tolak')
 
 module.exports = router;
