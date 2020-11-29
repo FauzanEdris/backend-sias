@@ -1,11 +1,11 @@
 const express = require('express')
-const { authenticate } = require('../controllers/admin')
+const adminController = require('../controllers/admin')
 const router = express.Router()
 
-router.get('/users', authenticate)
-router.post('/users', authenticate)
-router.put('/users', authenticate)
-router.patch('/users', authenticate)
-router.delete('/users', authenticate)
+router.get('/users', adminController.view_users)
+router.post('/users')
+router.put('/users')
+router.patch('/users')
+router.delete('/users')
 
 module.exports = router
