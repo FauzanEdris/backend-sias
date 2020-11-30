@@ -8,8 +8,7 @@ const semesterSchema = new Schema({
   status_semester: { type: Number, required: true, default: -100 },
   status_pendaftaran: { type: Number, required: true, default: -100 },
   status_jadwal_asdos: { type: Number, required: true, default: -100 },
-  status_jadwal_dosen: { type: Number, required: true, default: -100  },
-  status: { type: Number, required: true, default: -200 },
+  status_jadwal_dosen: { type: Number, required: true, default: -100  }
 },
 {
   timestamps: { createdAt: 'created_at', updatedAt: 'update_at' }
