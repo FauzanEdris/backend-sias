@@ -1,24 +1,24 @@
-const express = require('express')
+const express = require("express");
 // eslint-disable-next-line no-unused-vars
-const db = require('./config/database')
-const app = express()
+const db = require("./config/database");
+const app = express();
 
-const indexRouter = require('./routes/index')
-const authRouter = require('./routes/authenticate')
-const adminRouter = require('./routes/admin')
-const operatorRouter = require('./routes/operator')
-const asdosRouter = require('./routes/asdos')
-const dosenRouter = require('./routes/dosen')
-const akaRouter = require('./routes/akademik')
-const keuRouter = require('./routes/keuangan')
+const indexRouter = require("./routes/index");
+const authRouter = require("./routes/authenticate");
+const adminRouter = require("./routes/admin");
+const operatorRouter = require("./routes/operator");
+const asdosRouter = require("./routes/asdos");
+const dosenRouter = require("./routes/dosen");
+const akaRouter = require("./routes/akademik");
+const keuRouter = require("./routes/keuangan");
 
-app.use('/', indexRouter)
-app.use('/auth', authRouter)
-app.use('/admin', adminRouter)
-app.use('/operator', operatorRouter)
-app.use('/asdos', asdosRouter)
-app.use('/dosen', dosenRouter)
-app.use('/aka', akaRouter)
-app.use('/keu', keuRouter)
+app.use("/", indexRouter);
+app.use("/auth", authRouter);
+app.use("/admin", adminRouter);
+app.use("/operator", operatorRouter);
+app.use("/asdos", asdosRouter);
+app.use("/dosen", dosenRouter);
+app.use("/aka", akaRouter);
+app.use("/keu", keuRouter);
 
-module.exports = app
+module.exports = app;
