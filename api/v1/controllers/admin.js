@@ -1,10 +1,10 @@
-const { view_users, view_spesific_user, update_user } = require("../services/admin");
+const adminServices = require("../services/admin");
 
 module.exports = {
   view_users: async (req, res, next) => {
     const { skip, limit } = req.query;
     try {
-      const data = await view_users({ skip, limit });
+      const data = await adminServices.view_users({ skip, limit });
       // other service call (or same service, different function can go here)
       // i.e. - await generateBlogpostPreview()
 
@@ -18,7 +18,7 @@ module.exports = {
   view_by_id: async (req, res, next) =>{
     const { id } = req.params;
     try {
-      const data = await view_spesific_user({ id });
+      const data = await adminServices.view_spesific_user({ id });
       // other service call (or same service, different function can go here)
       // i.e. - await generateBlogpostPreview()
 
@@ -29,11 +29,11 @@ module.exports = {
       // res.sendStatus(500) && next(error)
     }
   },
-  add_users: async (req, res, next) => {
-    const { data } = req.body;
+  add_user: async (req, res, next) => {
+    const data = req.body;
     try {
-      //
-      res.json(data);
+      const result = await adminServices.add_user(data);
+      res.json(result);
       next();
     } catch (e) {
       //
@@ -43,7 +43,7 @@ module.exports = {
     const { skip, limit } = req.query;
     const { id, value } = req.body;
     try {
-      const data = await update_user({ id, value }, { skip, limit });
+      const data = await adminServices.update_user({ id, value }, { skip, limit });
       res.json(data);
       next();
     } catch (e) {
