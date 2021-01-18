@@ -1,17 +1,25 @@
 const mongoose = require("mongoose");
-const { Schema, model, Types } = mongoose;
+const { Schema, model } = mongoose;
 const bcrypt = require("bcrypt");
 const saltRounds = 12;
 
 const usersSchema = new Schema(
   {
-    _id: { type: Types.ObjectId, required: false },
-    id_user: { type: Number, required: true, unique: true, sparse: true },
-    name: { type: String, trim: true, required: true },
+    id_user: { 
+      type: Number,
+      required: true,
+      unique: [true, 'NIM/NIK dibutuhakan!'],
+      sparse: true
+    },
+    name: { 
+      type: String,
+      trim: true,
+      required: [true, 'Nama dibutuhan!']
+    },
     username: {
       type: String,
       trim: true,
-      required: true,
+      required: [true, 'Username dibutuhkan!'],
       unique: true,
       sparse: true,
     },
@@ -25,7 +33,6 @@ const usersSchema = new Schema(
     password: {
       type: String,
       trim: true,
-      required: true,
       default: "@asdosstikombali"
     },
     status: { type: Number, required: true },
@@ -57,27 +64,26 @@ module.exports = {
     return data;
   },
   add_user: async ({ id_user, name, username, email, password, status = false, role }) => {
-    const session = mongoose.startSession();
+    const session = await mongoose.startSession();
+    console.log('init');
     const transactionOptions = {
       readPreference: 'primary',
       readConcern: { level: 'local' },
       writeConcern: { w: 'majority' }
     };
-
-    (await session).withTransaction(async () => {
-      try {
-        await userModel.create({ id_user, name, username, email, password, status }, { session: session })
-        .then((data) => {
-          console.log(data);
-        });
-      } catch(error) {
-        console.log(error);
-      }
-    }, transactionOptions);
-
-    (await session).endSession();
-    
-    return { id_user, name, username, email, password, status, role };
+    let ayam = null;
+    try {
+      await session.withTransaction(async () => {
+        const roleModel = require('../models/roles');
+        await userModel.create([{ id_user, name, username, email, password, status }], { session });
+        await roleModel.create([ role ], { session })
+      }, transactionOptions)
+    } finally {
+      await session.endSession();
+    }
+    console.log('end');
+    return ayam;
+    // return { id_user, name, username, email, password, status, role };
   },
   update_user: async ({ id, value }) => {
     const data = await userModel.model.updateOne(id, value);
