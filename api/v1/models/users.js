@@ -3,6 +3,7 @@ const { Schema, model } = mongoose;
 const bcrypt = require("bcrypt");
 const saltRounds = 12;
 
+/** User Schema Database */
 const usersSchema = new Schema(
   {
     id_user: { 
@@ -50,43 +51,99 @@ usersSchema.pre("save", async function (next) {
 
 const userModel = model("users", usersSchema);
 
+/** Users Model */
 module.exports = {
   view_all: async ({ projection, skip, limit }) => {
-    skip = skip > 0 ? limit * (skip - 1) : 0;
-    const data = await userModel
-      .find({}, projection)
-      .skip(parseInt(skip))
-      .limit(parseInt(limit));
-    return data;
+    try {
+      skip = skip > 0 ? limit * (skip - 1) : 0;
+      limit = limit || 5;
+      const data = await userModel
+        .find({}, projection)
+        .skip(parseInt(skip))
+        .limit(parseInt(limit));
+      return data;
+    } catch (e) {
+      console.log(e)
+      return e.message;
+    }
   },
-  view_by_id: async ({ id, projection = { _id: 0, password: 0 } }) => {
-    const data = await userModel.findOne({ id }, projection);
-    return data;
+  view_by_id: async ({ id, projection = {} }) => {
+    try {
+      projection._id = projection._id ?? 0;
+      projection.password = projection.password ?? 0;
+      const data = await userModel.findOne({ id_user: id }, projection);
+      return data;
+    } catch (e) {
+      return e.message;
+    }
   },
   add_user: async ({ id_user, name, username, email, password, status = false, role }) => {
+    const roleRelationModel = require('../models/user_role_relation');
+    let result = true;
     const session = await mongoose.startSession();
-    console.log('init');
     const transactionOptions = {
       readPreference: 'primary',
       readConcern: { level: 'local' },
       writeConcern: { w: 'majority' }
     };
-    let ayam = null;
+
     try {
       await session.withTransaction(async () => {
-        const roleModel = require('../models/roles');
         await userModel.create([{ id_user, name, username, email, password, status }], { session });
-        await roleModel.create([ role ], { session })
+        await roleRelationModel.create([{ id_user, role }], { session })
       }, transactionOptions)
+    } catch (e) {
+      result = e.message
     } finally {
       await session.endSession();
     }
-    console.log('end');
-    return ayam;
-    // return { id_user, name, username, email, password, status, role };
+
+    return result;
   },
   update_user: async ({ id, value }) => {
-    const data = await userModel.model.updateOne(id, value);
-    return data;
+    const roleRelationModel = require('../models/user_role_relation');
+    let result = true;
+    const { id_user, name, username, email, password, status = false, role } = value
+    const session = await mongoose.startSession();
+    const transactionOptions = {
+      readPreference: 'primary',
+      readConcern: { level: 'local' },
+      writeConcern: { w: 'majority' }
+    };
+
+    try {
+      await session.withTransaction(async () => {
+        await userModel.updateOne({ id_user: id }, { $set: { id_user, name, username, email, password, status, role } }, { runValidators: true, session });
+        await roleRelationModel.updateOne({ id_user: id }, { $set: { role } }, { runValidators: true, session });
+      }, transactionOptions)
+    } catch (e) {
+      result = { error: e.message};
+    } finally {
+      await session.endSession();
+    }
+    
+    return result;
   },
+  delete_user: async ({ id }) => {
+    const roleRelationModel = require('../models/user_role_relation');
+    let result = true;
+    const session = await mongoose.startSession();
+    const transactionOptions = {
+      readPreference: 'primary',
+      readConcern: { level: 'local' },
+      writeConcern: { w: 'majority' }
+    };
+
+    try {
+      await session.withTransaction(async () => {
+        console.log(id)
+        await userModel.deleteOne({ id_user: id }, { session });
+        await roleRelationModel.deleteOne({ id_user: id }, { session });
+      }, transactionOptions)
+    } catch (e) {
+      result = e.message;
+    }
+
+    return result;
+  }
 };

@@ -1,25 +1,29 @@
 const userModel = require("../models/users");
-
 /*
  * if you need to make calls to additional tables, data stores (Redis, for example),
  * or call an external endpoint as part of creating the blogpost, add them to this service
  */
 
+/** Admin Services */
 module.exports = {
-  view_users: async ({ skip, limit }) => {
+  all: async () => {
+    return 'a';
+  },
+  view_users: async ({ skip = null, limit = null }) => {
     try {
-      const projection = { name: 1, email: 1, status: 1 };
+      const projection = { name: 1, id_user: 1, email: 1, status: 1 };
       return await userModel.view_all({ projection, skip, limit });
     } catch (e) {
-      throw new Error(e.message);
+      // throw new Error(e.message);
+      return e.message;
     }
   },
   view_spesific_user: async ({ id }) => {
     try {
-      const projection = { password: 0 };
-      return await userModel.view_by_id({ id, projection });
+      return await userModel.view_by_id({ id });
     } catch (e) {
-      throw new Error(e.message);
+      // throw new Error(e.message);
+      return e.message;
     }
   },
   add_user: async (data) => {
@@ -29,23 +33,25 @@ module.exports = {
       throw new Error(e.message);
     }
   },
-  update_user: async (value, options) => {
+  update_user: async (data, options) => {
     try {
-      const { matchedCount, modifiedCount } = await userModel.update_user(value);
-      if (matchedCount === 1 && modifiedCount === 1) {
-        return this.view_users(options);
+      const result = await userModel.update_user(data, options);
+      if (!result.error) {
+        const result = module.exports.view_users(options);
+        return result;
       }
-      return false;
+      return result || 'Tidak ada data terubah!';
     } catch (e) {
-      throw new Error(e.message);
+      // throw new Error(e.message);
+      return e.message;
     }
   },
   delete_user: async ({ id }) => {
     try {
-      const projection = { password: 0 };
-      return await userModel.view_by_id({ id, projection });
+      return await userModel.delete_user({ id });
     } catch (e) {
-      throw new Error(e.message);
+      // throw new Error(e.message);
+      return e.message;
     }
   }
 };
