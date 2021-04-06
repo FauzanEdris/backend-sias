@@ -22,20 +22,20 @@ Because this is still under development, so below are the features that I will b
 
 - [x] Administrator
   - [x] CRUD User
-- [] Operator
-  - [] CRUD semester schedule (KRS).
-- [] Dosen
-  - [] Accept or reject the Assistant Lecturer registration
-  - [] Booking Assistant Lecturer schedule
-- [] Asisten Dosen
-  - [] Choosing a schedule (KRS)
-- [] Akademik
-  - [] Recap the activities of the Assistant Lecturer in the class
-- [] Keuangan
-  - [] Recap the attendance of the Assistant Lecturer in the class
-- [] Guest (Not Login)
-  - [] Login
-  - [] Assistant Lecturer Registration
+- [ ] Operator
+  - [ ] CRUD semester schedule (KRS).
+- [ ] Dosen
+  - [ ] Accept or reject the Assistant Lecturer registration
+  - [ ] Booking Assistant Lecturer schedule
+- [ ] Asisten Dosen
+  - [ ] Choosing a schedule (KRS)
+- [ ] Akademik
+  - [ ] Recap the activities of the Assistant Lecturer in the class
+- [ ] Keuangan
+  - [ ] Recap the attendance of the Assistant Lecturer in the class
+- [ ] Guest (Not Login)
+  - [ ] Login
+  - [ ] Assistant Lecturer Registration
 
 List can be changed at any time.
 
