@@ -7,8 +7,8 @@ const pertemuanSchema = new Schema({
   pertemuan_ke: { type: Number, required: true },
   tgl: { type:Date, required: true },
   materi: { type:String, trim: true, required: true },
-  status_akademik: { type: Number, required: true, default: 0  },
-  status_keuangan: { type: Number, required: true, default: 0  }
+  status_akademik: { type: Boolean, default: false  },
+  status_keuangan: { type: Boolean, default: false  }
 },
 {
   timestamps: { createdAt: 'created_at', updatedAt: 'update_at' }
