@@ -18,3 +18,22 @@ const semesterSchema = new Schema(
 
 // eslint-disable-next-line no-unused-vars
 const semesterModel = model("pendaftaran_asdos", semesterSchema);
+
+/** Semester Model */
+module.exports = {
+  view_all: async () => {
+    // 
+  },
+  view_by_id: async () => {
+    // 
+  },
+  add_semester: async () => {
+    // 
+  },
+  update_semester: async () => {
+    // 
+  },
+  delete_semester: async () => {
+    // 
+  }
+}
