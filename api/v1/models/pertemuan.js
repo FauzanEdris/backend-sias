@@ -16,3 +16,21 @@ const pertemuanSchema = new Schema({
 
 // eslint-disable-next-line no-unused-vars
 const pertemuanModel = model('pendaftaran_asdos', pertemuanSchema)
+
+module.exports = {
+  view_pertemuan: async () => {
+    //
+  },
+  view_pertemuan_by_id: async () => {
+    //
+  },
+  add_pertemuan: async () => {
+    //
+  },
+  update_pertemuan: async () => {
+    //
+  },
+  delete_pertemuan: async () => {
+    //
+  }
+}
