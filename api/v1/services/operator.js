@@ -1,4 +1,4 @@
-const { view_all } = require("../models/users");
+const semesterModel = require("../models/semester");
 
 /*
  * if you need to make calls to additional tables, data stores (Redis, for example),
@@ -8,9 +8,22 @@ const { view_all } = require("../models/users");
 module.exports = {
   view_semester: async ({ skip, limit }) => {
     try {
-      return await view_all({ skip, limit });
+      return await semesterModel.view_all({ skip, limit });
     } catch (e) {
       throw new Error(e.message);
     }
   },
+  add_semester: async (data) => {
+    try {
+      return await semesterModel.add_semester(data);
+    } catch (error) {
+      // 
+    }
+  },
+  update_semester: async () => {
+    // 
+  },
+  delete_semester: async () => {
+    // 
+  }
 };

@@ -1,12 +1,10 @@
-const operatorService = require('../services/operator')
-
-const { view_semester } = operatorService
+const operatorService = require('../services/operator');
 
 module.exports = {
   view_semester: async (req, res, next) => {
     const { skip, limit } = req.query
     try {
-      const data = await view_semester({ skip, limit })
+      const data = await operatorService.view_semester({ skip, limit });
       // other service call (or same service, different function can go here)
       // i.e. - await generateBlogpostPreview()
 
@@ -20,8 +18,8 @@ module.exports = {
   add_semester: async (req, res, next) => {
     const { data } = req.body
     try {
-      // 
-      res.json(data)
+      const result = await operatorService.add_semester(data);
+      res.json(result)
       next()
     } catch (e) {
       // 
