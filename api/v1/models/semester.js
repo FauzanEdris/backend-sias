@@ -17,7 +17,7 @@ const semesterSchema = new Schema(
 );
 
 // eslint-disable-next-line no-unused-vars
-const semesterModel = model("pendaftaran_asdos", semesterSchema);
+const semesterModel = model("semesters", semesterSchema);
 
 /** Semester Model */
 module.exports = {
