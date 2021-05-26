@@ -21,19 +21,87 @@ const semesterModel = model("pendaftaran_asdos", semesterSchema);
 
 /** Semester Model */
 module.exports = {
-  view_all: async () => {
-    // 
+  view_all: async ({ projection, skip, limit }) => {
+    try {
+      skip = skip > 0 ? limit * (skip - 1) : 0;
+      limit = limit || 5;
+      const data = await semesterModel
+        .find({}, projection)
+        .skip(parseInt(skip))
+        .limit(parseInt(limit));
+      return data;
+    } catch (e) {
+      console.log(e);
+      return e.message;
+    }
   },
-  view_by_id: async () => {
-    // 
+  view_by_id: async ({ id, projection = {} }) => {
+    try {
+      projection._id = projection._id ?? 0;
+      const data = await semesterModel.findOne({ _id: id }, projection);
+      return data;
+    } catch (e) {
+      return e.message;
+    }
   },
-  add_semester: async () => {
-    // 
+  add_semester: async ({
+    tahun,
+    semester,
+    status_semester,
+    status_pendaftaran,
+    status_jadwal_asdos = false,
+    status_jadwal_dosen = false,
+  }) => {
+    try {
+      await semesterModel.create([
+        {
+          tahun,
+          semester,
+          status_semester,
+          status_pendaftaran,
+          status_jadwal_asdos,
+          status_jadwal_dosen,
+        },
+      ]);
+      return true;
+    } catch (e) {
+      return e.message;
+    }
   },
-  update_semester: async () => {
-    // 
+  update_semester: async ({ id, value }) => {
+    try {
+      const {
+        tahun,
+        semester,
+        status_semester,
+        status_pendaftaran,
+        status_jadwal_asdos,
+        status_jadwal_dosen,
+      } = value;
+      await semesterModel.updateOne([
+        { _id: id },
+        {
+          $set: {
+            tahun,
+            semester,
+            status_semester,
+            status_pendaftaran,
+            status_jadwal_asdos,
+            status_jadwal_dosen,
+          },
+        },
+      ]);
+      return true;
+    } catch (e) {
+      return { error: e.message };
+    }
   },
-  delete_semester: async () => {
-    // 
-  }
-}
+  delete_semester: async ({ id }) => {
+    try {
+      await semesterModel.deleteOne({ _id: id });
+      return true;
+    } catch (e) {
+      return { error: e.message };
+    }
+  },
+};
