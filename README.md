@@ -17,6 +17,45 @@ npm install
 And after instal the package, you can run the project by run the command below.
 - `npm run dev` to run in development environment
 
+## Endpoint API
+| HTTP Verb | Base Endpoint |      Endpoint       |
+| :-------: | :-----------: | :-----------------: |
+|    ===    | Administrator |         ===         |
+|    GET    |    /admin     |       /users        |
+|    GET    |    /admin     |      /users:id      |
+|   POST    |    /admin     |       /users        |
+|    PUT    |    /admin     |      /users:id      |
+|  DELETE   |    /admin     |      /users:id      |
+|    ---    |      ---      |         ---         |
+|    ===    |   Operator    |         ===         |
+|    GET    |   /operator   |      /semester      |
+|   POST    |   /operator   |      /semester      |
+|    PUT    |   /operator   |      /semester      |
+|  DELETE   |   /operator   |      /semester      |
+|    PUT    |   /operator   | /status/pendaftaran |
+|    PUT    |   /operator   |    /status/asdos    |
+|    PUT    |   /operator   |    /status/dosen    |
+|    GET    |   /operator   |       /jadwal       |
+|   POST    |   /operator   |       /jadwal       |
+|    GET    |   /operator   |  /jadwal/download   |
+|    ---    |      ---      |         ---         |
+|    ===    |     Dosen     |         ===         |
+|    GET    |    /dosen     |         /..         |
+|    ---    |      ---      |         ---         |
+|    ===    | Asisten Dosen |         ===         |
+|    GET    |    /asdos     |         /..         |
+|    ---    |      ---      |         ---         |
+|    ===    |   Akademik    |         ===         |
+|    GET    |     /aka      |         /..         |
+|    ---    |      ---      |         ---         |
+|    ===    |   Keuangan    |         ===         |
+|    GET    |     /keu      |         /..         |
+|    ---    |      ---      |         ---         |
+|    ===    |     Guest     |         ===         |
+|    GET    |     /auth     |       /login        |
+|    GET    |     /auth     |       /logout       |
+|    GET    |     /auth     |    /authecticate    |
+|    GET    | /pendaftaran  |          /          |
 ## TO DO
 Because this is still under development, so below are the features that I will build.
 
