@@ -1,23 +1,24 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
+
 const { Schema, model } = mongoose;
 
 const rolesSchema = new Schema(
   {
-    role: { 
+    role: {
       type: String,
       required: true,
       unique: [true, 'ID Role dibutuhkan!'],
-      sparse: true
+      sparse: true,
     },
-    name: { 
+    name: {
       type: String,
       trim: true,
-      required: [true, 'Nama Role dibutuhan!']
-    }
+      required: [true, 'Nama Role dibutuhan!'],
+    },
   },
   {
-    timestamps: { createdAt: "created_at", updatedAt: "update_at" },
-  }
+    timestamps: { createdAt: 'created_at', updatedAt: 'update_at' },
+  },
 );
 
-module.exports = model("roles", rolesSchema);
+module.exports = model('roles', rolesSchema);

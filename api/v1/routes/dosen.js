@@ -1,15 +1,16 @@
-const express = require('express')
-const { authenticate } = require('../controllers/authenticate')
-const router = express.Router()
+const express = require('express');
+const { authenticate } = require('../controllers/authenticate');
 
-router.get('/login', authenticate)
+const router = express.Router();
 
-router.get('/pendaftaran')
-router.get('/pendaftaran/transkip')
-router.put('/pendaftaran/terima')
-router.put('/pendaftaran/tolak')
+router.get('/login', authenticate);
 
-router.put('/booking/tambah/asdos')
-router.put('/booking/batal/asdos')
+router.get('/pendaftaran');
+router.get('/pendaftaran/transkip');
+router.put('/pendaftaran/terima');
+router.put('/pendaftaran/tolak');
 
-module.exports = router
+router.put('/booking/tambah/asdos');
+router.put('/booking/batal/asdos');
+
+module.exports = router;

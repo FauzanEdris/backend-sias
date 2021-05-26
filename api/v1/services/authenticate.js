@@ -1,13 +1,13 @@
-const { find } = require('../models/users')
+const { find } = require('../models/users');
 
 module.exports = {
   login: async () => {
     try {
-      const data = {}
+      const data = {};
 
-      return await find(data)
-    } catch(e) {
-      throw new Error(e.message)
+      return await find(data);
+    } catch (e) {
+      throw new Error(e.message);
     }
-  }
-}
+  },
+};

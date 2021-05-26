@@ -1,4 +1,5 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
+
 const { Schema, model, Types } = mongoose;
 
 const semesterSchema = new Schema(
@@ -12,12 +13,12 @@ const semesterSchema = new Schema(
     status_jadwal_dosen: { type: Boolean, default: false },
   },
   {
-    timestamps: { createdAt: "created_at", updatedAt: "update_at" },
-  }
+    timestamps: { createdAt: 'created_at', updatedAt: 'update_at' },
+  },
 );
 
 // eslint-disable-next-line no-unused-vars
-const semesterModel = model("semesters", semesterSchema);
+const semesterModel = model('semesters', semesterSchema);
 
 /** Semester Model */
 module.exports = {

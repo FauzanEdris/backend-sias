@@ -1,4 +1,4 @@
-const userModel = require("../models/users");
+const userModel = require('../models/users');
 /*
  * if you need to make calls to additional tables, data stores (Redis, for example),
  * or call an external endpoint as part of creating the blogpost, add them to this service
@@ -6,12 +6,12 @@ const userModel = require("../models/users");
 
 /** Admin Services */
 module.exports = {
-  all: async () => {
-    return 'a';
-  },
+  all: async () => 'a',
   view_users: async ({ skip = null, limit = null }) => {
     try {
-      const projection = { name: 1, id_user: 1, email: 1, status: 1 };
+      const projection = {
+        name: 1, id_user: 1, email: 1, status: 1,
+      };
       return await userModel.view_all({ projection, skip, limit });
     } catch (e) {
       // throw new Error(e.message);
@@ -53,5 +53,5 @@ module.exports = {
       // throw new Error(e.message);
       return e.message;
     }
-  }
+  },
 };

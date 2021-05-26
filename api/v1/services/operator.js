@@ -1,4 +1,4 @@
-const semesterModel = require("../models/semester");
+const semesterModel = require('../models/semester');
 
 /*
  * if you need to make calls to additional tables, data stores (Redis, for example),
@@ -17,13 +17,13 @@ module.exports = {
     try {
       return await semesterModel.add_semester(data);
     } catch (error) {
-      // 
+      //
     }
   },
   update_semester: async () => {
-    // 
+    //
   },
   delete_semester: async () => {
-    // 
-  }
+    //
+  },
 };

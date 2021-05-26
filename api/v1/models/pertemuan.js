@@ -1,4 +1,5 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
+
 const { Schema, model, Types } = mongoose;
 
 const pertemuanSchema = new Schema(
@@ -12,12 +13,12 @@ const pertemuanSchema = new Schema(
     status_keuangan: { type: Boolean, default: false },
   },
   {
-    timestamps: { createdAt: "created_at", updatedAt: "update_at" },
-  }
+    timestamps: { createdAt: 'created_at', updatedAt: 'update_at' },
+  },
 );
 
 // eslint-disable-next-line no-unused-vars
-const pertemuanModel = model("pendaftaran_asdos", pertemuanSchema);
+const pertemuanModel = model('pendaftaran_asdos', pertemuanSchema);
 
 module.exports = {
   view_pertemuan: async ({ projection, skip, limit }) => {
