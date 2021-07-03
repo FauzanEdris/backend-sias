@@ -1,5 +1,6 @@
 const express = require('express');
-// const db = require('./config/database');
+const db = require('./config/database');
+
 const app = express();
 
 const indexRouter = require('./routes/index');
