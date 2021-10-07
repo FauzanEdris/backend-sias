@@ -74,12 +74,29 @@ module.exports = {
       return e.message;
     }
   },
-  view_by_id: async ({ id, projection = {} }) => {
+  view_by_id: async (email) => {
+    try {
+      const data = await userModel.findOne({ email });
+      console.log(data);
+      return data;
+    } catch (e) {
+      return e.message;
+    }
+  },
+  view_by_email: async ({ email, projection = {} }) => {
     try {
       projection._id = projection._id ?? 0;
       projection.password = projection.password ?? 0;
-      const data = await userModel.findOne({ id_user: id }, projection);
+      const data = await userModel.findOne({ email }, projection);
       return data;
+    } catch (e) {
+      return e.message;
+    }
+  },
+  get_password: async (id) => {
+    try {
+      const data = await userModel.findOne(id, { password: 1 });
+      return data.password;
     } catch (e) {
       return e.message;
     }

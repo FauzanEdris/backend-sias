@@ -14,6 +14,8 @@ const akaRouter = require('./routes/akademik');
 const keuRouter = require('./routes/keuangan');
 const pendaftaranRouter = require('./routes/pendaftaran');
 
+app.set('secretKey', process.env.SECRET_KEY); // jwt secret token
+
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
 app.use('/admin', adminRouter);
