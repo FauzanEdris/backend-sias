@@ -18,7 +18,6 @@ module.exports = {
       res.json(results);
       next();
     } catch (e) {
-      console.log(e.message);
       // res.sendStatus(500) && next(error)
     }
   },
@@ -37,7 +36,6 @@ module.exports = {
       res.json(data);
       next();
     } catch (e) {
-      console.log(e.message);
       // res.sendStatus(500) && next(error)
     }
   },
@@ -73,7 +71,7 @@ module.exports = {
       res.json(result);
       next();
     } catch (e) {
-      return e.message;
+      // return e.message;
     }
   },
   /**
@@ -88,7 +86,7 @@ module.exports = {
       res.json(result);
       next();
     } catch (e) {
-      return e.message;
+      // return e.message;
     }
   },
 };

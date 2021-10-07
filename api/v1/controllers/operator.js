@@ -16,8 +16,9 @@ module.exports = {
     }
   },
   add_semester: async (req, res, next) => {
-    const { data } = req.body;
+    const data = req.body;
     try {
+      console.log(data);
       const result = await operatorService.add_semester(data);
       res.json(result);
       next();

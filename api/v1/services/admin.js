@@ -37,8 +37,8 @@ module.exports = {
     try {
       const result = await userModel.update_user(data, options);
       if (!result.error) {
-        const result = module.exports.view_users(options);
-        return result;
+        const user = module.exports.view_users(options);
+        return user;
       }
       return result || 'Tidak ada data terubah!';
     } catch (e) {

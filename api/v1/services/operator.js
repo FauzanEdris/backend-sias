@@ -17,6 +17,8 @@ module.exports = {
     try {
       return await semesterModel.add_semester(data);
     } catch (error) {
+      console.log(error);
+      return error;
       //
     }
   },

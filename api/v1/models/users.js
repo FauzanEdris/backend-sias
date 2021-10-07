@@ -10,6 +10,9 @@ const transactionOptions = {
   writeConcern: { w: 'majority' },
 };
 
+/* File Helper */
+const roleRelationModel = require('./user_role_relation');
+
 /** User Schema Database */
 const usersSchema = new Schema(
   {
@@ -51,7 +54,7 @@ const usersSchema = new Schema(
 );
 
 // hash user password before saving into database
-usersSchema.pre('save', async function (next) {
+usersSchema.pre('save', async (next) => {
   this.password = await bcrypt.hashSync(this.password, saltRounds);
   next();
 });
@@ -60,24 +63,25 @@ const userModel = model('users', usersSchema);
 
 /** Users Model */
 module.exports = {
-  view_all: async ({ projection, skip, limit }) => {
+  view_all: async (option) => {
     try {
-      skip = skip > 0 ? limit * (skip - 1) : 0;
-      limit = limit || 5;
+      const skip = option.skip > 0 ? option.limit * (option.skip - 1) : 0;
+      const limit = option.limit || 5;
       const data = await userModel
-        .find({}, projection)
-        .skip(parseInt(skip))
-        .limit(parseInt(limit));
+        .find({}, option.projection)
+        .skip(parseInt(skip, 2))
+        .limit(parseInt(limit, 2));
       return data;
     } catch (e) {
-      console.log(e);
       return e.message;
     }
   },
-  view_by_id: async ({ id, projection = {} }) => {
+  view_by_id: async ({ id, view = {} }) => {
     try {
-      projection._id = projection._id ?? 0;
-      projection.password = projection.password ?? 0;
+      const projection = view;
+      // eslint-disable-next-line no-underscore-dangle
+      projection._id = view._id ?? 0;
+      projection.password = view.password ?? 0;
       const data = await userModel.findOne({ id_user: id }, projection);
       return data;
     } catch (e) {
@@ -87,7 +91,6 @@ module.exports = {
   add_user: async ({
     id_user, name, username, email, password, status = false, role,
   }) => {
-    const roleRelationModel = require('./user_role_relation');
     let result = true;
     const session = await mongoose.startSession();
 
@@ -107,7 +110,6 @@ module.exports = {
     return result;
   },
   update_user: async ({ id, value }) => {
-    const roleRelationModel = require('./user_role_relation');
     let result = true;
     const {
       id_user, name, username, email, password, status = false, role,
@@ -121,7 +123,8 @@ module.exports = {
             id_user, name, username, email, password, status, role,
           },
         }, { runValidators: true, session });
-        await roleRelationModel.updateOne({ id_user: id }, { $set: { role } }, { runValidators: true, session });
+        await roleRelationModel
+          .updateOne({ id_user: id }, { $set: { role } }, { runValidators: true, session });
       }, transactionOptions);
     } catch (e) {
       result = { error: e.message };
@@ -132,13 +135,11 @@ module.exports = {
     return result;
   },
   delete_user: async ({ id }) => {
-    const roleRelationModel = require('./user_role_relation');
     let result = true;
     const session = await mongoose.startSession();
 
     try {
       await session.withTransaction(async () => {
-        console.log(id);
         await userModel.deleteOne({ id_user: id }, { session });
         await roleRelationModel.deleteOne({ id_user: id }, { session });
       }, transactionOptions);

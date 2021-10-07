@@ -4,7 +4,6 @@ const { Schema, model, Types } = mongoose;
 
 const semesterSchema = new Schema(
   {
-    _id: Types.ObjectId,
     tahun: { type: Number, required: true, sparse: true },
     semester: { type: String, trim: true, required: true },
     status_semester: { type: Boolean, default: false },
@@ -22,23 +21,25 @@ const semesterModel = model('semesters', semesterSchema);
 
 /** Semester Model */
 module.exports = {
-  view_all: async ({ projection, skip, limit }) => {
+  view_all: async (option) => {
     try {
-      skip = skip > 0 ? limit * (skip - 1) : 0;
-      limit = limit || 5;
+      const skip = option.skip > 0 ? option.limit * (option.skip - 1) : 0;
+      const limit = option.limit || 5;
       const data = await semesterModel
-        .find({}, projection)
-        .skip(parseInt(skip))
-        .limit(parseInt(limit));
+        .find({}, option.projection)
+        .skip(parseInt(skip, 2))
+        .limit(parseInt(limit, 2));
       return data;
     } catch (e) {
       console.log(e);
       return e.message;
     }
   },
-  view_by_id: async ({ id, projection = {} }) => {
+  view_by_id: async ({ id, view }) => {
     try {
-      projection._id = projection._id ?? 0;
+      const projection = view;
+      // eslint-disable-next-line no-underscore-dangle
+      projection._id = view._id ?? 0;
       const data = await semesterModel.findOne({ _id: id }, projection);
       return data;
     } catch (e) {
@@ -54,7 +55,7 @@ module.exports = {
     status_jadwal_dosen = false,
   }) => {
     try {
-      await semesterModel.create([
+      return await semesterModel.create([
         {
           tahun,
           semester,
@@ -64,8 +65,8 @@ module.exports = {
           status_jadwal_dosen,
         },
       ]);
-      return true;
     } catch (e) {
+      console.log(e);
       return e.message;
     }
   },
