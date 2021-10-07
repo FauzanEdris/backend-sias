@@ -1,4 +1,5 @@
 const express = require('express');
+// eslint-disable-next-line no-unused-vars
 const db = require('./config/database');
 
 const app = express();
