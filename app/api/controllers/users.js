@@ -7,7 +7,7 @@ module.exports = {
       if (err) {
         next(err)
       } else {
-        res.json({ status: 'success', msg: 'User Ditemukan!', data: userInfo })
+        res.json({ status: 'success', msg: 'Data User Ditemukan.', data: userInfo })
       }
     })
   },
@@ -21,7 +21,7 @@ module.exports = {
         for (const user of userInfo) {
           userList.push({ id: user._id, id_user: user.id, nama: user.nama, role: user.role, status: user.status, email: user.email })
         }
-        res.json({ status: 'success', message: 'Data ditemukan!', users: userList })
+        res.json({ status: 'success', message: 'List Semua Data User.', users: userList })
       }
     })
   },
@@ -31,7 +31,17 @@ module.exports = {
         res.json({ status: 'error', message: err, data: null })
         next(err)
       } else {
-        res.json({ status: 'success', message: 'AYAM!!!', data: null })
+        res.json({ status: 'success', message: 'Data User Berhasil Terupdate.', data: null })
+      }
+    })
+  },
+  updatePassword: function (req, res, next) {
+    userModel.findByIdAndUpdate(req.body.id, { password: req.body.password }, function (err, movieInfo) {
+      if (err) {
+        res.json({ status: 'error', message: err, data: null })
+        next(err)
+      } else {
+        res.json({ status: 'success', message: 'Password Berhasil Diubah.', data: null })
       }
     })
   },
@@ -40,7 +50,7 @@ module.exports = {
       if (err) {
         next(err)
       } else {
-        res.json({ status: 'success', message: 'Movie deleted successfully!!!', data: null })
+        res.json({ status: 'success', message: 'Data User Berhasil Terhapus.', data: null })
         console.log(req.params.id)
       }
     })
