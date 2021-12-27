@@ -17,7 +17,7 @@ const auth = function (req, res, next) {
           res.status(401)
           res.json({ status: 'error', msg: 'Harap Login', data: null })
           // res.redirect('/')
-        } else if (user.role === 'Admin') {
+        } else if (['Admin', 'Operator', 'Asdos', 'Dosen', 'Akademik', 'Keuangan'].includes(user.role)) {
           next()
         } else {
           res.status(401)
@@ -35,11 +35,13 @@ const auth = function (req, res, next) {
   }
 }
 
-router.get('/', auth, userController.getAll)
-router.post('/', auth, userController.create)
-router.get('/:userId', auth, userController.getById)
-router.put('/:userId', auth, userController.updateById)
-router.put('/password/:userId', auth, userController.updatePassword)
-router.delete('/:userId', auth, userController.deleteById)
+// router.get('/', auth, userController.getAll)
+// router.post('/', auth, userController.create)
+// router.get('/:userId', auth, userController.getById)
+// router.put('/:userId', auth, userController.updateById)
+// router.delete('/:userId', auth, userController.deleteById)
+
+router.put('/me', auth, userController.updateProfile)
+router.put('/me/password', auth, userController.updateProfilePassword)
 
 module.exports = router

@@ -21,6 +21,7 @@ const admin = require('./routes/admin')
 const operator = require('./routes/operator')
 const dosen = require('./routes/dosen')
 const asdos = require('./routes/asdos')
+const profile = require('./routes/profile')
 
 const jwt = require('jsonwebtoken')
 
@@ -130,6 +131,7 @@ app.use('/api/admin', admin)
 app.use('/api/operator', operator)
 app.use('/api/dosen', dosen)
 app.use('/api/asdos', asdos)
+app.use('/api/profile', profile)
 
 // private route
 // app.use('/api/users', validateUser, users)
