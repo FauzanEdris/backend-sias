@@ -10,6 +10,7 @@ const server = require('http').createServer(app)
 const io = require('socket.io')(server)
 // const path = require('path')
 const helmet = require('helmet')
+const helpers = require('./lib/helpers')
 
 // const users = require('./routes/users')
 const auths = require('./routes/auths')
@@ -80,6 +81,7 @@ app.use(cookieParser())
 // })
 app.use(function (req, res, next) {
   req.io = io
+  req.helpers = helpers
   next()
 })
 
