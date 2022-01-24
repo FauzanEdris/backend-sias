@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt')
 
 module.exports = {
   getById: function (req, res, next) {
-    console.log(req.body)
+    // console.log(req.body)
     userModel.findById(req.params.userId, { password: 0 }, function (err, userInfo) {
       if (err) {
         next(err)
