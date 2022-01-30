@@ -181,7 +181,7 @@ module.exports = {
             ], function (err, data) {
               if (err) {
                 res.json({ status: 'error', message: 'Tidak ada data untuk ditampilkan.', data: err })
-              } else if (data.length === 0 || data.jadwal._id_asdos !== req.params.idAsdos) {
+              } else if (data.length === 0 || ( data.jadwal && data.jadwal._id_asdos !== req.params.idAsdos )) {
                 res.json({ status: 'error', message: 'Tidak ada data untuk ditampilkan.', data: null })
               } else {
                 console.log(req.body)
