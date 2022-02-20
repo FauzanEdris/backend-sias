@@ -95,7 +95,8 @@ const JadwalSchema = new Schema({
       type: Number,
       trim: true,
       required: true,
-      unique: true
+      unique: true,
+      sparse: true
     },
     tgl: {
       type: Date,
@@ -176,7 +177,7 @@ const PendaftaranSchema = new Schema({
     type: Boolean,
     trim: true,
     default: false
-  }
+  },
 })
 
 // Perkuliahan Scehma

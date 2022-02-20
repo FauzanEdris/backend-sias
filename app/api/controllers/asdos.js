@@ -6,13 +6,14 @@ module.exports = {
   // Polling Jadwal
   getJadwal: async function (req, res, next) {
     try {
-      const check = await semesterModel.aggregate([
+      const data = await semesterModel.aggregate([
         { $match: { status: true } },
         { $unwind: '$pendaftaran' },
         { $match: { 'pendaftaran._id': req.params.idAsdos } },
         { $project: { 'pendaftaran.status_kuliah': 1 } }
       ])
-      if (check[0].pendaftaran.status_kuliah === false) {
+
+      if (data[0] !== undefined && data[0].pendaftaran.status_kuliah === false) {
         await semesterModel.find({ status: true, status_jadwal_asdos: true }, { jadwal: 1 }, function (err, dataJadwal) {
           if (err) {
             res.status(400)
@@ -42,10 +43,6 @@ module.exports = {
     ])
     if (data[0].jadwal._id_asdos === (req.body.id_user === null ? data[0].jadwal._id_asdos : req.body.id_user) || data[0].jadwal._id_asdos === null || data[0].jadwal._id_asdos === '') {
       const totalSKS = (req.body.id_user) ? (Number(data[0].pendaftaran.total_sks) + Number(data[0].jadwal.sks)) : (Number(data[0].pendaftaran.total_sks) - Number(data[0].jadwal.sks))
-      console.log(totalSKS)
-      console.log(totalSKS >= 0)
-      console.log(totalSKS <= 12)
-      console.log(totalSKS === req.body.sks)
       if (totalSKS >= 0 && totalSKS <= 12) {
         semesterModel.updateOne({ _id: req.params.idSemester, status: true, 'pendaftaran._id': userId }, { $set: { 'pendaftaran.$.total_sks': totalSKS } })
           .then((result) => {
