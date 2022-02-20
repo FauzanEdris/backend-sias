@@ -31,39 +31,41 @@ module.exports = {
     }
   },
   updatePolling: async function (req, res, next) {
-    if ((req.body.sks >= 0 && req.body.sks <= 12) || req.body.id_user === null) {
-      const check = await semesterModel.findOne({ _id: req.params.idSemester, status: true, 'jadwal._id': req.body.id_jadwal }, { 'jadwal._id_asdos': 1, jadwal: { $elemMatch: { _id: req.body.id_jadwal } } })
-      if (check.jadwal[0]._id_asdos === (req.body.id_user === null ? check.jadwal[0]._id_asdos : req.body.id_user) || check.jadwal[0]._id_asdos === null || check.jadwal[0]._id_asdos === '') {
-        const user = await userModel.findOne({ _id: req.body.id_user }, { password: 0 })
-        const checkSks = await semesterModel.findOne({ _id: req.params.idSemester, status: true, 'pendaftaran._id': user !== null ? user.id : null }, { pendaftaran: { $elemMatch: { _id: user !== null ? user.id : null } } })
-        const sks = checkSks !== null ? checkSks.pendaftaran[0].total_sks : null
-        if (sks >= 0 && sks <= 12) {
-          // const curentSks = await semesterModel.findOne({ _id: req.params.idSemester, status: true, 'pendaftaran._id': user !== null ? user.id : req.body.id }, { total_sks: 1 })
-          // console.log(curentSks)
-          semesterModel.updateOne({ _id: req.params.idSemester, status: true, 'pendaftaran._id': user !== null ? user.id : req.body.id }, { $set: { 'pendaftaran.$.total_sks': req.body.sks } })
-            .then((result) => {
-              console.log(user)
-              console.log(result)
-              if (result.nModified === 1) {
-                semesterModel.updateOne({ _id: req.params.idSemester, status: true, 'jadwal._id': req.body.id_jadwal }, { $set: { 'jadwal.$.nama_asdos': user !== null ? user.nama : '', 'jadwal.$._id_asdos': user !== null ? user._id : null, 'jadwal.$.id_asdos': user !== null ? user.id : '', 'jadwal.$.status_asdos': user !== null ? user.status : '', 'jadwal.$.email_asdos': user !== null ? user.email : null } }, { multi: false }, function (err, ayam) {
-                  if (err) {
-                    res.json({ status: 'error', message: 'Data Gagal Ditambah.', data: err })
-                  } else {
-                    res.json({ status: 'success', message: 'Data Berhasil Di Update.', data: ayam })
-                  }
-                })
-              } else {
-                res.json({ status: 'error', message: 'Harap Ulangi.', data: null })
-              }
-            })
-        } else {
-          res.json({ status: 'error', message: 'Batas SKS sudah tercapai.', data: null })
-        }
+    const user = await userModel.findOne({ _id: req.body.id_user }, { password: 0 })
+    const userId = user !== null ? user.id : req.body.id
+    const data = await semesterModel.aggregate([
+      { $match: { _id: mongoose.Types.ObjectId(req.params.idSemester), status: true, 'pendaftaran._id': userId, 'jadwal._id': mongoose.Types.ObjectId(req.body.id_jadwal) } },
+      { $unwind: { path: '$pendaftaran', includeArrayIndex: 'a' } },
+      { $unwind: { path: '$jadwal', includeArrayIndex: 'b' } },
+      { $match: { 'pendaftaran._id': userId, 'jadwal._id': mongoose.Types.ObjectId(req.body.id_jadwal) } },
+      { $project: { 'pendaftaran.total_sks': 1, 'jadwal.sks': 1, 'jadwal._id_asdos': 1 } }
+    ])
+    if (data[0].jadwal._id_asdos === (req.body.id_user === null ? data[0].jadwal._id_asdos : req.body.id_user) || data[0].jadwal._id_asdos === null || data[0].jadwal._id_asdos === '') {
+      const totalSKS = (req.body.id_user) ? (Number(data[0].pendaftaran.total_sks) + Number(data[0].jadwal.sks)) : (Number(data[0].pendaftaran.total_sks) - Number(data[0].jadwal.sks))
+      console.log(totalSKS)
+      console.log(totalSKS >= 0)
+      console.log(totalSKS <= 12)
+      console.log(totalSKS === req.body.sks)
+      if (totalSKS >= 0 && totalSKS <= 12) {
+        semesterModel.updateOne({ _id: req.params.idSemester, status: true, 'pendaftaran._id': userId }, { $set: { 'pendaftaran.$.total_sks': totalSKS } })
+          .then((result) => {
+            if (result.nModified === 1) {
+              semesterModel.updateOne({ _id: req.params.idSemester, status: true, 'jadwal._id': req.body.id_jadwal }, { $set: { 'jadwal.$.nama_asdos': user !== null ? user.nama : '', 'jadwal.$._id_asdos': user !== null ? user._id : null, 'jadwal.$.id_asdos': user !== null ? user.id : '', 'jadwal.$.status_asdos': user !== null ? user.status : '', 'jadwal.$.email_asdos': user !== null ? user.email : null } }, { multi: false }, function (err, ayam) {
+                if (err) {
+                  res.json({ status: 'error', message: 'Data Gagal Ditambah.', data: err })
+                } else {
+                  res.json({ status: 'success', message: 'Data Berhasil Di Update.', data: ayam })
+                }
+              })
+            } else {
+              res.json({ status: 'error', message: 'Harap Ulangi.', data: null })
+            }
+          })
       } else {
-        res.json({ status: 'error', message: 'Asdos lain sudah mengambil jadwal ini.', data: null })
+        res.json({ status: 'error', message: 'Batas SKS sudah tercapai.', data: null })
       }
     } else {
-      res.json({ status: 'error', message: 'Batas SKS sudah tercapai.', data: null })
+      res.json({ status: 'error', message: 'Asdos lain sudah mengambil jadwal ini.', data: null })
     }
   },
   // Perkuliahan
@@ -84,15 +86,15 @@ module.exports = {
           { $group: { _id: '$_id', jadwal: { $push: '$jadwal' } } }, // menyatukan
           { $project: { _id: 1, 'jadwal._id': 1, 'jadwal._id_jadwal': 1, 'jadwal.hari': 1, 'jadwal.jam_kuliah': 1, 'jadwal.nama_mk': 1, 'jadwal.sks': 1, 'jadwal.kelas': 1, 'jadwal.nama_dosen': 1 } } // yang di tampilkan
         ],
-        function (err, data) {
-          if (err) {
-            res.json({ status: 'error', message: 'Tidak ada jadwal untuk ditampilkan.', data: err })
-          } else if (data.length === 0 || data[0].jadwal.length === 0) {
-            res.json({ status: 'error', message: 'Tidak ada jadwal untuk ditampilkan.', data: null })
-          } else {
-            res.json({ status: 'success', message: 'Data Jadwal.', data: data })
-          }
-        })
+          function (err, data) {
+            if (err) {
+              res.json({ status: 'error', message: 'Tidak ada jadwal untuk ditampilkan.', data: err })
+            } else if (data.length === 0 || data[0].jadwal.length === 0) {
+              res.json({ status: 'error', message: 'Tidak ada jadwal untuk ditampilkan.', data: null })
+            } else {
+              res.json({ status: 'success', message: 'Data Jadwal.', data: data })
+            }
+          })
       } else {
         res.json({ status: 'error', message: 'Tidak ada jadwal untuk ditampilkan.', data: null })
       }
@@ -181,7 +183,7 @@ module.exports = {
             ], function (err, data) {
               if (err) {
                 res.json({ status: 'error', message: 'Tidak ada data untuk ditampilkan.', data: err })
-              } else if (data.length === 0 || ( data.jadwal && data.jadwal._id_asdos !== req.params.idAsdos )) {
+              } else if (data.length === 0 || (data.jadwal && data.jadwal._id_asdos !== req.params.idAsdos)) {
                 res.json({ status: 'error', message: 'Tidak ada data untuk ditampilkan.', data: null })
               } else {
                 console.log(req.body)
