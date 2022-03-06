@@ -79,7 +79,7 @@ module.exports = {
                       ])
                       console.log(data)
                       // const data = await semesterModel.findOne({ _id: semester[0]._id, status: true, 'pendaftaran._id': req.body.id }, { pendaftaran: { $elemMatch: { _id: req.body.id } }, 'pendaftaran._id': 1 })
-                      res.json({ status: 'ok', data: { id: data._id, id2: data[0].pendaftaran._id } })
+                      res.json({ status: 'ok', data: { id: data[0]._id, id2: data[0].pendaftaran._id } })
                     } else {
                       res.json({ status: 'success', message: 'Pendaftaran Berhasil.', data: null })
                     }
