@@ -40,15 +40,23 @@ module.exports = {
               const check = await userModel.find({ id: req.body.id, role: 'Asdos' })
               if (check.length === 0) {
                 userModel.create({ id: req.body.id, nama: req.body.nama, role: 'Asdos', status: false, email: req.body.email }, async function (err, result) {
-                  if (err) {console.log(1)
+                  if (err) {
                     const hapus = await semesterModel.findOne({ 'pendaftaran._id': req.body.id }, { pendaftaran: { $elemMatch: { _id: req.body.id } } })
                     await semesterModel.updateOne({ status: true, 'pendaftaran._id': hapus.pendaftaran[0]._id }, { $pull: { pendaftaran: { _id: hapus.pendaftaran[0]._id } } })
                     res.json({ status: 'error', message: 'Email Anda sudah ada semester sebelumnya.', data: null })
                   } else {
                     if (req.body.status === 'Mahasiswa') {
-                      const data = await semesterModel.findOne({ _id: semester[0]._id, status: true, 'pendaftaran._id': req.body.id }, { pendaftaran: { $elemMatch: { _id: req.body.id } } }, { 'pendaftaran._id': 1, 'pendaftaran.nama': 1 })
+                      console.log('data')
+                      const data = await semesterModel.aggregate([
+                        { $match: { _id: semester[0]._id, status: true, 'pendaftaran._id': req.body.id } },
+                        { $unwind: '$pendaftaran' },
+                        { $match: { 'pendaftaran._id': req.body.id } },
+                        { $project: { 'pendaftaran._id': 1, 'pendaftaran.nama': 1 } }
+                      ])
+                      console.log(data)
+                      // const data = await semesterModel.findOne({ _id: semester[0]._id, status: true, 'pendaftaran._id': req.body.id }, { pendaftaran: { $elemMatch: { _id: req.body.id } } }, { 'pendaftaran._id': 1, 'pendaftaran.nama': 1 })
                       // const data = await semesterModel.findOne({ _id: semester[0]._id, status: true, 'pendaftaran._id': { $eq: req.body.id } }, { 'pendaftaran._id': 1 } )
-                      res.json({ status: 'ok', data: { id: semester[0]._id, id2: data.pendaftaran[0]._id } })
+                      res.json({ status: 'ok', data: { id: semester[0]._id, id2: data[0].pendaftaran._id } })
                     } else {
                       res.json({ status: 'success', message: 'Pendaftaran Berhasil.', data: null })
                     }
@@ -62,8 +70,16 @@ module.exports = {
                     res.json({ status: 'error', message: 'Email Anda sudah ada semester sebelumnya.', data: null, p: err })
                   } else {
                     if (req.body.status === 'Mahasiswa') {
-                      const data = await semesterModel.findOne({ _id: semester[0]._id, status: true, 'pendaftaran._id': req.body.id }, { pendaftaran: { $elemMatch: { _id: req.body.id } }, 'pendaftaran._id': 1 })
-                      res.json({ status: 'ok', data: { id: data._id, id2: data.pendaftaran[0]._id } })
+                      console.log('data')
+                      const data = await semesterModel.aggregate([
+                        { $match: { _id: semester[0]._id, status: true, 'pendaftaran._id': req.body.id } },
+                        { $unwind: '$pendaftaran' },
+                        { $match: { 'pendaftaran._id': req.body.id } },
+                        { $project: { 'pendaftaran._id': 1, 'pendaftaran.nama': 1 } }
+                      ])
+                      console.log(data)
+                      // const data = await semesterModel.findOne({ _id: semester[0]._id, status: true, 'pendaftaran._id': req.body.id }, { pendaftaran: { $elemMatch: { _id: req.body.id } }, 'pendaftaran._id': 1 })
+                      res.json({ status: 'ok', data: { id: data._id, id2: data[0].pendaftaran._id } })
                     } else {
                       res.json({ status: 'success', message: 'Pendaftaran Berhasil.', data: null })
                     }
