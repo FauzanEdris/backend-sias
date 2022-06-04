@@ -96,7 +96,6 @@ const JadwalSchema = new Schema({
       trim: true,
       required: true,
       unique: true,
-      sparse: true
     },
     tgl: {
       type: Date,
