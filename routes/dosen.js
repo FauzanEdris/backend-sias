@@ -5,13 +5,14 @@ const dosenController = require('../app/api/controllers/dosen')
 const jwt = require('jsonwebtoken')
 
 const auth = function (req, res, next) {
-  req.helpers.auth('Dosen', {req, res, next})
+  req.helpers.auth('Dosen', { req, res, next })
 }
 
 // Rekomendasi Dosen
 router.post('/calon', auth, dosenController.getCalon)
 router.put('/calon', auth, dosenController.terimaCalon)
 router.delete('/calon/:idCalon', auth, dosenController.hapusCalon)
+router.get('/calon/transkip=:transkip', auth, dosenController.getTranskip)
 
 // Booking Asdos
 router.get('/jadwal', auth, dosenController.getJadwal)

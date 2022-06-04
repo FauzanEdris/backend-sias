@@ -1,5 +1,7 @@
 const userModel = require('../models/users')
 const semesterModel = require('../models/semester')
+const fs = require('fs')
+const path = require('path')
 
 module.exports = {
   getCalon: function (req, res, next) {
@@ -15,6 +17,10 @@ module.exports = {
         }
       }
     })
+  },
+  getTranskip: function (req, res, next) {
+    res.setHeader("content-type", "application/pdf");
+    fs.createReadStream(path.join(__dirname, '../src/transkip/') + req.params.transkip).pipe(res);
   },
   getAsdos: async function (req, res, next) {
     try {
