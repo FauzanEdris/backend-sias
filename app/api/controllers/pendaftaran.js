@@ -99,9 +99,10 @@ module.exports = {
     const date = new Date()
     const transkip = await req.files.transkip
     // console.log(transkip)
-    const dir = await path.join(__dirname, '../src/transkip/') + date.getFullYear() + date.getMonth() + date.getDate() + '__' + transkip.name
+    const transkipName = date.getFullYear().toString() + date.getMonth().toString() + date.getDate().toString() + '__' + transkip.name
+    const dir = await path.join(__dirname, '../src/transkip/') + transkipName
     await transkip.mv(dir)
-    await semesterModel.findOneAndUpdate({ _id: req.params.idPendaftaran, 'pendaftaran._id': req.params.idUser }, { $set: { 'pendaftaran.$.transkip': dir } }, function (err, result) {
+    await semesterModel.findOneAndUpdate({ _id: req.params.idPendaftaran, 'pendaftaran._id': req.params.idUser }, { $set: { 'pendaftaran.$.transkip': transkipName } }, function (err, result) {
       if (err) {
         res.json({ status: 'error', message: err, data: result })
       } else {
